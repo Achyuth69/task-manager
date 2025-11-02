@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: mern-task-manager-backend
+    env: node
+    rootDir: backend
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    plan: free
+
+  - type: web
+    name: mern-task-manager-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: "build"
+    plan: free

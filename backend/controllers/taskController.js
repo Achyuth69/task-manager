@@ -1,30 +1,24 @@
 const Task = require("../models/Task");
 
-// ✅ Get all tasks with pagination & filters
+// Get all tasks
 exports.getTasks = async (req, res) => {
   try {
     const { page = 1, limit = 10, status, priority } = req.query;
-
-    const pageNumber = parseInt(page);
-    const limitNumber = parseInt(limit);
 
     const query = {};
     if (status) query.status = status;
     if (priority) query.priority = priority;
 
     const totalTasks = await Task.countDocuments(query);
-
     const tasks = await Task.find(query)
-      .skip((pageNumber - 1) * limitNumber)
-      .limit(limitNumber)
+      .skip((page - 1) * limit)
+      .limit(limit)
       .sort({ createdAt: -1 });
-
-    const totalPages = Math.ceil(totalTasks / limitNumber);
 
     res.json({
       tasks,
-      totalPages,
-      currentPage: pageNumber,
+      totalPages: Math.ceil(totalTasks / limit),
+      currentPage: Number(page),
     });
   } catch (err) {
     console.error("Error fetching tasks:", err);
@@ -32,14 +26,11 @@ exports.getTasks = async (req, res) => {
   }
 };
 
-// ✅ Create a new task
+// Create task
 exports.createTask = async (req, res) => {
   try {
     const { title, description, priority, status } = req.body;
-
-    if (!title) {
-      return res.status(400).json({ message: "Title is required" });
-    }
+    if (!title) return res.status(400).json({ message: "Title is required" });
 
     const newTask = new Task({
       title,
@@ -56,20 +47,11 @@ exports.createTask = async (req, res) => {
   }
 };
 
-// ✅ Update a task
+// Update task
 exports.updateTask = async (req, res) => {
   try {
-    const { id } = req.params;
-    const updates = req.body;
-
-    const updatedTask = await Task.findByIdAndUpdate(id, updates, {
-      new: true,
-    });
-
-    if (!updatedTask) {
-      return res.status(404).json({ message: "Task not found" });
-    }
-
+    const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedTask) return res.status(404).json({ message: "Task not found" });
     res.json(updatedTask);
   } catch (err) {
     console.error("Error updating task:", err);
@@ -77,17 +59,11 @@ exports.updateTask = async (req, res) => {
   }
 };
 
-// ✅ Delete a task
+// Delete task
 exports.deleteTask = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const deletedTask = await Task.findByIdAndDelete(id);
-
-    if (!deletedTask) {
-      return res.status(404).json({ message: "Task not found" });
-    }
-
+    const deletedTask = await Task.findByIdAndDelete(req.params.id);
+    if (!deletedTask) return res.status(404).json({ message: "Task not found" });
     res.json({ message: "Task deleted successfully" });
   } catch (err) {
     console.error("Error deleting task:", err);

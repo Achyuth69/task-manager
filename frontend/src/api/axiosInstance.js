@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:6969/api", // ✅ backend port
+  baseURL:
+    process.env.NODE_ENV === "production"
+      ? "https://mern-task-manager-backend.onrender.com/api" // 🔥 your deployed backend URL
+      : "http://localhost:6969/api", // for local dev
   headers: {
     "Content-Type": "application/json",
   },

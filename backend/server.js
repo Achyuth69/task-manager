@@ -4,7 +4,6 @@ require('dotenv').config();
 // Import dependencies
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const taskRoutes = require('./routes/taskRoutes');
 
@@ -31,7 +30,7 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-// Global error handler (optional)
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('❌ Server Error:', err.message);
   res.status(500).json({ error: 'Server Error' });
