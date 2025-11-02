@@ -5,6 +5,12 @@ This app allows users to create, view, update, and delete tasks in a simple and 
 
 ---
 
+## 🌍 Live Demo
+
+Frontend: [https://mern-task-manager-frontend-g3az.onrender.com](https://mern-task-manager-frontend-g3az.onrender.com)  
+Backend API: [https://task-manager-ua0c.onrender.com](https://task-manager-ua0c.onrender.com)
+
+
 ## 🚀 Tech Stack
 
 **Frontend:** React.js  
