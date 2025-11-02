@@ -1,47 +1,30 @@
-// server.js
-require("dotenv").config(); // Load .env variables
+// backend/server.js
+require('./cron/notifyDueTasks');
+// Load cron job (for due date notifications)
+require('./cron/notifications');
 
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const taskRoutes = require("./routes/taskRoutes");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/db');
+
+const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
+connectDB();
 
-// ✅ Use environment port or fallback to 6969
-const PORT = process.env.PORT || 6969;
-
-// ✅ Middleware
+app.use(cors());
 app.use(express.json());
 
-// ✅ CORS setup
-app.use(
-  cors({
-    origin: "*", // later, replace '*' with your Netlify frontend URL for security
-  })
-);
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
-// ✅ Routes
-app.use("/api/tasks", taskRoutes);
+// Start cron (notifications)
+require('./cron/notifications'); // prints logs; uses Ethereal by default
 
-// ✅ MongoDB connection
-const MONGO_URI =
-  process.env.MONGO_URI || "mongodb://127.0.0.1:27017/mern-task-manager";
+app.get('/', (req, res) => res.send('🚀 Task Manager API'))
 
-mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Connection Error:", err.message));
-
-// ✅ Root route (for Render health check or browser test)
-app.get("/", (req, res) => {
-  res.send("🚀 Backend is running successfully!");
-});
-
-// ✅ Start server
-app.listen(PORT, () =>
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
-);
+const PORT = process.env.PORT || 6969;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
