@@ -1,57 +1,37 @@
-const Task = require('../models/Task');
+const Task = require("../models/Task");
 
-// Create
-exports.createTask = async (req, res) => {
-  try {
-    const task = new Task({ ...req.body, user: req.user.id });
-    await task.save();
-    res.status(201).json(task);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
-
-// Read (with filtering + pagination)
+// Get all tasks with pagination & filters
 exports.getTasks = async (req, res) => {
   try {
-    const { status, priority, page = 1, limit = 10 } = req.query;
-    const query = { user: req.user.id };
+    const { page = 1, limit = 10, status, priority } = req.query;
 
+    // Convert to numbers
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+
+    // Apply filters if provided
+    const query = {};
     if (status) query.status = status;
     if (priority) query.priority = priority;
 
+    // Get total count for pagination
+    const totalTasks = await Task.countDocuments(query);
+
+    // Fetch paginated tasks
     const tasks = await Task.find(query)
-      .sort({ dueDate: 1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber)
+      .sort({ createdAt: -1 }); // newest first
 
-    const total = await Task.countDocuments(query);
-    res.json({ tasks, total, page });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+    const totalPages = Math.ceil(totalTasks / limitNumber);
 
-// Update
-exports.updateTask = async (req, res) => {
-  try {
-    const task = await Task.findOneAndUpdate(
-      { _id: req.params.id, user: req.user.id },
-      req.body,
-      { new: true }
-    );
-    res.json(task);
+    res.json({
+      tasks,
+      totalPages,
+      currentPage: pageNumber,
+    });
   } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// Delete
-exports.deleteTask = async (req, res) => {
-  try {
-    await Task.findOneAndDelete({ _id: req.params.id, user: req.user.id });
-    res.json({ message: 'Task deleted' });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Error fetching tasks:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };

@@ -1,61 +1,138 @@
-/* App.css */
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
+/* App Background */
+body, html {
   margin: 0;
   padding: 0;
+  height: 100%;
+  background-color: #f5f7fc;
+  font-family: Arial, sans-serif;
 }
 
-.container {
-  max-width: 600px;
-  margin: 50px auto;
+/* Root container */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar */
+nav {
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 40px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+
+nav a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+  margin-right: 16px;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* Dashboard Wrapper (centers it) */
+.main-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;  /* Centers horizontally */
+  align-items: flex-start;  /* Keeps it near the top (not full vertical center) */
+  padding-top: 60px;        /* Space below navbar */
+}
+
+/* Dashboard Box */
+.dashboard {
+  width: 900px;
+  max-width: 90%;
   background: #fff;
-  padding: 30px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  border-radius: 10px;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
 }
 
-h1 {
+.dashboard h2 {
   text-align: center;
+  margin-bottom: 25px;
   color: #333;
 }
 
-form {
+/* Filters */
+.filter-bar {
   display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
   margin-bottom: 20px;
 }
 
-input[type="text"] {
-  flex: 1;
-  padding: 10px;
-  font-size: 16px;
+.filter-bar select,
+.filter-bar input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: 0.3s;
 }
 
+.filter-bar select:focus,
+.filter-bar input:focus {
+  border-color: #007bff;
+}
+
+/* Buttons */
 button {
-  padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: 0.3s;
 }
 
 button:hover {
   background-color: #0056b3;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+/* Task List */
+.task-list {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-li {
+.task-card {
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  padding: 15px 20px;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid #ddd;
+  align-items: center;
 }
 
-li span {
-  cursor: pointer;
+.task-card h4 {
+  margin: 0;
+  color: #333;
+}
+
+.task-card span {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 25px;
 }

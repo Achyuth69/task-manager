@@ -1,12 +1,12 @@
-// backend/routes/taskRoutes.js
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const taskCtrl = require('../controllers/taskController');
-const { protect } = require('../middleware/authMiddleware');
+const { getTasks } = require("../controllers/taskController");
+const { createTask, updateTask, deleteTask } = require("../controllers/taskController");
 
-router.get('/', protect, taskCtrl.getTasks);
-router.post('/', protect, taskCtrl.createTask);
-router.put('/:id', protect, taskCtrl.updateTask);
-router.delete('/:id', protect, taskCtrl.deleteTask);
+// Pagination-enabled route
+router.get("/", getTasks);
+router.post("/", createTask);
+router.put("/:id", updateTask);
+router.delete("/:id", deleteTask);
 
 module.exports = router;

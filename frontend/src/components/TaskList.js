@@ -1,21 +1,16 @@
-import React from 'react';
+import React from "react";
 
-function TaskList({ tasks, toggleComplete, removeTask }) {
+export default function TaskList({ tasks, onDelete }) {
+  if (!tasks.length) return <p>No tasks found.</p>;
+
   return (
     <ul>
-      {tasks.map(task => (
-        <li key={task._id}>
-          <span
-            style={{ textDecoration: task.completed ? 'line-through' : 'none', cursor: 'pointer' }}
-            onClick={() => toggleComplete(task)}
-          >
-            {task.title}
-          </span>
-          <button onClick={() => removeTask(task._id)}>Delete</button>
+      {tasks.map((task) => (
+        <li key={task._id} style={{ marginBottom: "10px" }}>
+          <b>{task.title}</b> — {task.priority} —{" "}
+          <button onClick={() => onDelete(task._id)}>Delete</button>
         </li>
       ))}
     </ul>
   );
 }
-
-export default TaskList;

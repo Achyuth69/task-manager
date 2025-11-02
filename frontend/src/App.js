@@ -1,40 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { getTasks, createTask, updateTask, deleteTask } from './api/taskApi';
-import TaskList from './components/TaskList';
-import TaskForm from './components/TaskForm';
-import './App.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import Dashboard from "./components/Dashboard";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // ✅ Add this line!
 
 function App() {
-  const [tasks, setTasks] = useState([]);
-
-  const fetchTasks = async () => {
-    const res = await getTasks();
-    setTasks(res.data);
-  };
-
-  useEffect(() => { fetchTasks(); }, []);
-
-  const addTask = async (title) => {
-    const res = await createTask({ title });
-    setTasks([...tasks, res.data]);
-  };
-
-  const toggleComplete = async (task) => {
-    const res = await updateTask(task._id, { completed: !task.completed });
-    setTasks(tasks.map(t => t._id === task._id ? res.data : t));
-  };
-
-  const removeTask = async (id) => {
-    await deleteTask(id);
-    setTasks(tasks.filter(t => t._id !== id));
-  };
-
   return (
-    <div className="container">
-      <h1>Task Manager</h1>
-      <TaskForm addTask={addTask} />
-      <TaskList tasks={tasks} toggleComplete={toggleComplete} removeTask={removeTask} />
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+      </Routes>
+      <ToastContainer position="top-right" autoClose={2000} />
+    </>
   );
 }
 
