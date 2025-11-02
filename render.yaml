@@ -7,10 +7,12 @@ services:
     startCommand: "npm start"
     plan: free
 
+services:
   - type: web
     name: mern-task-manager-frontend
     env: static
-    rootDir: frontend
-    buildCommand: "npm install && npm run build"
-    staticPublishPath: "build"
-    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/build
+    envVars:
+      - key: REACT_APP_API_BASE_URL
+        value: https://task-manager-ua0c.onrender.com/api
